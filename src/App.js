@@ -9,15 +9,20 @@ function App() {
     const [items, setItems] = React.useState([]);
     const [cartOpened, setCartOpened] = React.useState(false);
 
-    fetch('https://60f2dfc76d44f300177887d3.mockapi.io/items')
-        .then((res) => {
-        return res.json();
-    })
-        .then(json => {
-            setItems(json);
-    });
+    // useEffect проверяется что бы на сервер отправлялся только один запрос
+    React.useEffect(() => {
+        // получение json и вытащить и него инфу
+        fetch('https://60f2dfc76d44f300177887d3.mockapi.io/items')
+            .then((res) => {
+                return res.json();
+            })
+            .then(json => {
+                setItems(json);
+            });
+    }, []);
 
   return (
+      // отображение и скрытие корзины
     <div className="wrapper clear">
         {cartOpened && <Drawer onClose={() => setCartOpened(false)} />}
         <Header onClickCart = {() => setCartOpened(true) } />
