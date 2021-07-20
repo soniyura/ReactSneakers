@@ -7,6 +7,7 @@ import Drawer from "./components/Drawer";
 function App() {
     //получение данных с mockapi
     const [items, setItems] = React.useState([]);
+    const [cartItems, setCartItems] = React.useState([]);
     const [cartOpened, setCartOpened] = React.useState(false);
 
     // useEffect проверяется что бы на сервер отправлялся только один запрос
@@ -21,10 +22,16 @@ function App() {
             });
     }, []);
 
+    // добавление товаров в корзину
+    const onAddToCart = (obj) => {
+        setCartItems(prev => [ ...prev, obj]);
+    };
+    console.log(cartItems);
+
   return (
       // отображение и скрытие корзины
     <div className="wrapper clear">
-        {cartOpened && <Drawer onClose={() => setCartOpened(false)} />}
+        {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} />}
         <Header onClickCart = {() => setCartOpened(true) } />
 
       <div className="content  p-40">
@@ -36,13 +43,13 @@ function App() {
           </div>
         </div>
           <div className="d-flex flex-wrap">
-              {items.map((obj) =>
+              {items.map((item) =>
                   <Card
-                      title={obj.title}
-                      price={obj.price}
-                      imageUrl={obj.imageUrl}
+                      title={item.title}
+                      price={item.price}
+                      imageUrl={item.imageUrl}
                       onFavorite={() => console.log('Добавили в закладки')}
-                      onPlus = {() => console.log('Нажали на плюс')}
+                      onPlus = {(obj) => onAddToCart(obj)}
                   />
               )}
           </div>
